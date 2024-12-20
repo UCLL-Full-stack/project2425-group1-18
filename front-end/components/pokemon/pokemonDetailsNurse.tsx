@@ -3,6 +3,8 @@ import { Pokemon, Trainer } from '@types';
 import nurseService from '../../services/nurse.service';  // Import the nurse service
 import trainerService from '../../services/trainer.service'; // Import the trainer service
 import styles from '../../styles/pokemon.module.css';
+import { useTranslation } from 'next-i18next';
+
 
 interface PokemonDetailsProps {
   pokemon: Pokemon;
@@ -20,6 +22,8 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
   clearSelected
 }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation();
+  
 
 
   const handleHeal = async () => {
@@ -51,7 +55,7 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
     try {
       // Call the addPokemonToTrainer function to send the Pokémon back to the trainer
       const updatedTrainer = await nurseService.addPokemonToTrainer(pokemon.id);
-      alert(`${pokemon.name} has been sent back to the trainer!`);
+      alert(`${pokemon.name} ${t("pokemon.send-back-success")}`);
       console.log('Updated Trainer:', updatedTrainer);
   
 
@@ -60,7 +64,7 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
           try {
 
             await nurseService.removePokemonFromNurse(pokemon.id);
-            alert(`${pokemon.name} has been removed from nurse's care.`);
+            alert(`${pokemon.name} ${t("pokemon.removed-from-care")}`);
             reload(!update);
             clearSelected(null);
           } catch (error: any) {
@@ -79,28 +83,28 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
   };
   return (
     <div className={styles.card}>
-      <h3>Details for {pokemon.name}</h3>
-      <p>Type: {pokemon.type}</p>
+      <h3>{t("pokemon.details")} {pokemon.name}</h3>
+      <p>{t("pokemon.type")}: {pokemon.type}</p>
       <div className={styles.healthContainer}>
         <p>
-          Health: {pokemon.health} / {pokemon.stats.hp}
+        {t("pokemon.health")} {pokemon.health} / {pokemon.stats.hp}
         </p>
       </div>
       <ul>
-        <li>Max HP: {pokemon.stats.hp}</li>
+        <li>{t("pokemon.hp")} {pokemon.stats.hp}</li>
       </ul>
 
       {}
       {pokemon.health < pokemon.stats.hp && (
         <button className={styles.healButton} onClick={handleHeal} disabled={isLoading}>
-          {isLoading ? 'Healing...' : 'Heal'}
+          {isLoading ? 'Healing...' : t("pokemon.heal")}
         </button>
       )}
 
       {}
       {pokemon.health === pokemon.stats.hp && (
         <button className={styles.healButton} onClick={handleSendBack} disabled={isLoading}>
-          {isLoading ? 'Sending...' : 'Send Back to Trainer'}
+          {isLoading ? 'Sending...' : t("pokemon.send-back")}
         </button>
       )}
     </div>

@@ -44,7 +44,12 @@
         "evolve" : "can evolve:",
         "cancel" : "cancel",
         "send-to-hospital" : "send to hospital",
-        "has-been-send-to-hospital" : "has been send to the hospital"
+        "has-been-send-to-hospital" : "has been send to the hospital",
+        "heal" : "heal",
+        "heal-success" : "has been healed successfully.",
+        "send-back" : "send back to trainer",
+        "send-back-success" : "has been sent back to the trainer!",
+        "removed-from-care" : "has been removed from nurse's care."
     },
     "badge" : {
         "location" : "This badge can be gotten at:",
