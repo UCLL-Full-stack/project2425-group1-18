@@ -259,7 +259,7 @@ nurseRouter.put('/heal/:pokemonId', async (req: Request, res: Response, next: Ne
  * @swagger
  * /nurses/pokemon/{idPokemon}:
  *   post:
- *     summary: Add a new Pokémon to the trainer of that Pokémon (using previousTrainerId)
+ *     summary: Return the Pokémon to the previous trainer  (using previousTrainerId)
  *     security:
  *       - bearerAuth: []
  *     parameters:
