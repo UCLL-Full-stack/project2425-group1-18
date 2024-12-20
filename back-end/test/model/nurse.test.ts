@@ -1,24 +1,24 @@
-import { Nurse } from '../../model/nurse'; 
-import { User } from '../../model/user'; 
-import { Pokemon } from '../../model/pokemon'; 
+import { Nurse } from '../../model/nurse'; // Adjust the import path accordingly
+import { User } from '../../model/user'; // Adjust the import path accordingly
+import { Pokemon } from '../../model/pokemon'; // Adjust the import path accordingly
 import { Role } from '@prisma/client';
 import { Stats as StatsPrisma, Nurse as NursePrisma, User as UserPrisma, Pokemon as PokemonPrisma } from '@prisma/client';
 
 describe('Nurse Class', () => {
 
-  
+  // Mock user data for creating Nurse instances
   const userData = {
     id: 1,
     firstName: 'Nurse',
     lastName: 'Joy',
     email: 'joy@example.com',
     password: 'joypassword123',
-    role: Role.nurse, 
+    role: Role.nurse, // Assuming 'nurse' is a role enum value or string
   };
 
-  const user = new User(userData); 
+  const user = new User(userData); // Create User instance
 
-
+  // Mock Pokémon data
   const pokemonData = {
     id: 1,
     name: 'Pikachu',
@@ -35,13 +35,13 @@ describe('Nurse Class', () => {
     canEvolve: true,
   };
 
-  const pokemon = new Pokemon(pokemonData); 
+  const pokemon = new Pokemon(pokemonData); // Create Pokémon instance
 
-
+  // Mock Nurse data
   const nurseData = {
     id: 1,
     user: user,
-    pokemon: [pokemon], 
+    pokemon: [pokemon], // Nurse has one Pokémon
   };
 
   let nurse: Nurse;
@@ -53,8 +53,8 @@ describe('Nurse Class', () => {
   test('should create a Nurse instance with valid data', () => {
     expect(nurse).toBeInstanceOf(Nurse);
     expect(nurse.getId()).toBe(1);
-    expect(nurse.getUser()).toBe(user); 
-    expect(nurse.getPokemon()).toEqual([pokemon]); 
+    expect(nurse.getUser()).toBe(user); // Ensure user is correctly assigned
+    expect(nurse.getPokemon()).toEqual([pokemon]); // Ensure Pokémon array is correctly assigned
   });
 
   test('should correctly compare two identical Nurse instances', () => {
@@ -71,7 +71,7 @@ describe('Nurse Class', () => {
   test('should create a Nurse instance using the from() static method', () => {
     const prismaNurseData: NursePrisma = {
       id: 1,
-      userId: 1, 
+      userId: 1, // Assuming userId is mapped correctly
     };
 
     const prismaUserData: UserPrisma = {
@@ -89,7 +89,7 @@ describe('Nurse Class', () => {
         type: 'Electric',
         health: 100,
         canEvolve: true,
-        statsId: 1, 
+        statsId: 1, // Assuming statsId links to the Stats Prisma model
         nurseId: 1,
         previousTrainerId: 1,
         trainerId: 1

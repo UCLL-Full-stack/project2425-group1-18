@@ -1,4 +1,4 @@
-import { Badge } from '../../model/badge'; 
+import { Badge } from '../../model/badge'; // Adjust the import path accordingly
 import { Badge as BadgePrisma } from '@prisma/client';
 
 describe('Badge Class', () => {
