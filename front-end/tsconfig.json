@@ -15,19 +15,18 @@
     "noEmit": true,
     "incremental": true,
     "esModuleInterop": true,
-    "module": "CommonJS",  // Set module to CommonJS for Jest compatibility
+    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "react-jsx",  // Using react-jsx for compatibility with modern JSX
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "strictNullChecks": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "test/**/*"  // Ensure your test files are included
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }
