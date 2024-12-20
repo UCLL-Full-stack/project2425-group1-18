@@ -205,6 +205,8 @@ const Pokemons: React.FC = () => {
         <PokemonOverviewTable
           pokemon={trainer.pokemon}
           selectPokemon={handleSelectPokemon}
+          setSelectTrainer={setSelectedTrainer}
+          trainer={trainer}
         />
         {selectedPokemon && selectedTrainer?.id === trainer.id && (
           <PokemonDetails
