@@ -122,31 +122,6 @@ const TrainerService = {
     const updatedTrainer = await response.json();
     return updatedTrainer as Trainer; 
   },
-
-  addPokemonToTrainer: async (pokemonId: number): Promise<Trainer> => {
-    const user = localStorage.getItem('loggedInUser');
-    let token = null;
-    if (user) {
-      token = JSON.parse(user).token;
-    }
-      const response = await fetch(`${API_URL}/trainers/pokemon/${pokemonId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
-        throw new Error(`Failed to add Pokémon to Trainer: ${errorText}`);
-      }
-
-      const data = await response.json();
-      return data as Trainer;
-
-  },
 };
 
 

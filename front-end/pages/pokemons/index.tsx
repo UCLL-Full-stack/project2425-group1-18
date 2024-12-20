@@ -9,6 +9,7 @@ import AddPokemonModal from '@components/pokemon/addPokemonModal';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serversideTranslations';
 import PokemonDetailsNurse from '@components/pokemon/pokemonDetailsNurse';
+import Head from 'next/head';
 
 const Pokemons: React.FC = () => {
   const [trainers, setTrainers] = useState<Trainer[]>([]);
@@ -88,6 +89,11 @@ const Pokemons: React.FC = () => {
     setSelectedPokemon(pokemon);
   };
 
+  const handleAddAdmin = (trainer:Trainer) => {
+    setSelectedTrainer(trainer)
+    setIsModalOpen(true)
+  }
+
   const handleAddPokemon = async (newPokemon: Pokemon) => {
     try {
       if (selectedTrainer && selectedTrainer.id) {
@@ -109,6 +115,9 @@ const Pokemons: React.FC = () => {
 
   return (
     <>
+    <Head>
+      <title>{t("app.title")}</title>
+    </Head>
       <Header />
       <main>
         <h1>{t('pokemon.pokemon')}</h1>
@@ -127,6 +136,12 @@ const Pokemons: React.FC = () => {
               <button onClick={() => setIsModalOpen(true)}>
                 {t('pokemon.add')}
               </button>
+              {selectedTrainer && isModalOpen && (
+              <AddPokemonModal
+                onClose={() => setIsModalOpen(false)}
+                onAddPokemon={handleAddPokemon}
+              />
+            )}
               <PokemonOverviewTable
                 pokemon={selectedTrainer.pokemon}
                 selectPokemon={handleSelectPokemon}
@@ -180,10 +195,11 @@ const Pokemons: React.FC = () => {
               <div key={trainer.id}>
                 <h3>{trainer.user.firstName}</h3>
                 <button
-                  onClick={() => setSelectedTrainer(trainer)}
+                  onClick={() => handleAddAdmin(trainer)}
+
                   style={{ marginBottom: '1em' }}
                 >
-                  {t('pokemon.add-pokemon')}
+                  {t('pokemon.add')}
                 </button>
                 <PokemonOverviewTable
                   pokemon={trainer.pokemon}

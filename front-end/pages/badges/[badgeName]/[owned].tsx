@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Badge, Trainer } from "@types";
 import TrainerService from "@services/trainer.service";
 import BadgeInfo from "@components/badges/badgeInfo";
+import Head from 'next/head';
 
 const namedBadge: React.FC = () => {
     const [selectedTrainer, setSelectedTrainer] = useState<Trainer | null>(null);
@@ -69,6 +70,9 @@ const namedBadge: React.FC = () => {
 
     return(
     <>
+        <Head>
+            <title>{t("app.title")}</title>
+        </Head>
         <Header/>
         <main>
             <BadgeInfo

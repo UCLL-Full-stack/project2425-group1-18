@@ -31,6 +31,7 @@
         "add": "Add Pokémon",
         "users-pokemon": "'s Pokémon",
         "pokemon" : "Pokémon",
+        "nurse-pokemon" : "'s Pokémon to take care off",
         "details" : "details for",
         "health" : "Health:",
         "stats": "stats:",
@@ -44,5 +45,11 @@
         "cancel" : "cancel",
         "send-to-hospital" : "send to hospital",
         "has-been-send-to-hospital" : "has been send to the hospital"
+    },
+    "badge" : {
+        "location" : "This badge can be gotten at:",
+        "difficulty" : "It has a difficulty of:",
+        "get" : "get badge",
+        "congrats" : "Congrats on getting this badge!"
     }
 }
