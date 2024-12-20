@@ -6,13 +6,13 @@ import { Stats as StatsPrisma, Nurse as NursePrisma, User as UserPrisma, Pokemon
 
 describe('Nurse Class', () => {
 
-  
   const userData = {
     id: 1,
     firstName: 'Nurse',
     lastName: 'Joy',
     email: 'joy@example.com',
     password: 'joypassword123',
+
     role: Role.nurse, 
   };
 
@@ -53,6 +53,7 @@ describe('Nurse Class', () => {
   test('should create a Nurse instance with valid data', () => {
     expect(nurse).toBeInstanceOf(Nurse);
     expect(nurse.getId()).toBe(1);
+
     expect(nurse.getUser()).toBe(user); 
     expect(nurse.getPokemon()).toEqual([pokemon]); 
   });
@@ -71,6 +72,7 @@ describe('Nurse Class', () => {
   test('should create a Nurse instance using the from() static method', () => {
     const prismaNurseData: NursePrisma = {
       id: 1,
+
       userId: 1, 
     };
 
@@ -89,6 +91,7 @@ describe('Nurse Class', () => {
         type: 'Electric',
         health: 100,
         canEvolve: true,
+
         statsId: 1, 
         nurseId: 1,
         previousTrainerId: 1,
