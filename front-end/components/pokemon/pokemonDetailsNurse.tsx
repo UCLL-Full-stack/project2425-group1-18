@@ -35,7 +35,7 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
     try {
 
       const response = await nurseService.healPokemon(nurseId, pokemon.id);
-      alert(`${pokemon.name} has been healed successfully.`);
+      alert(`${pokemon.name} ${t("pokemon.heal-success")}`);
       reload(!update);
       clearSelected(null);
     } catch (error: any) {

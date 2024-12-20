@@ -26,6 +26,9 @@ const Pokemons: React.FC = () => {
 
   const clearSelected = (pokemon: Pokemon | null) => {
     setSelectedPokemon(pokemon);
+    if (role == "admin") {
+      setSelectedTrainer(null)
+    }
   };
 
   // Check if the code is running in the browser and then access localStorage
