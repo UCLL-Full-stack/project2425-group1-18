@@ -6,6 +6,7 @@ import { useTranslation } from 'next-i18next';
 import { Badge, Trainer } from '@types';
 import TrainerService from '@services/trainer.service';
 import BadgeDisplay from '@components/badges/badgeDisplay';
+import Head from 'next/head';
 
 
 const badges: React.FC = () => {
@@ -73,6 +74,9 @@ const badges: React.FC = () => {
 
   return (
     <>
+        <Head>
+            <title>{t("app.title")}</title>
+        </Head>
       <Header />
       <main>
       <h1>Badge</h1>

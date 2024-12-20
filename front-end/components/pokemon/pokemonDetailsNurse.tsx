@@ -51,7 +51,7 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
   
     try {
       // Call the addPokemonToTrainer function to send the Pokémon back to the trainer
-      const updatedTrainer = await trainerService.addPokemonToTrainer(pokemon.id);
+      const updatedTrainer = await nurseService.addPokemonToTrainer(pokemon.id);
       alert(`${pokemon.name} has been sent back to the trainer!`);
       console.log('Updated Trainer:', updatedTrainer);
   

@@ -8,8 +8,18 @@ import { expressjwt } from 'express-jwt';
 import { trainerRouter } from './controller/trainer.routes'; // Ensure this path is correct
 import { userRouter } from './controller/user.routes'; // Ensure you have the user router for login/signup
 import { nurseRouter } from './controller/nurse.routes';
+import helmet from 'helmet';
 
 const app = express();
+app.use(helmet());
+
+app.use(
+  helmet.contentSecurityPolicy({
+      directives: {
+          connectSrc: ["'self'", 'https://api.ucll.be'],
+      },
+  })
+);
 
 // Load environment variables
 dotenv.config();

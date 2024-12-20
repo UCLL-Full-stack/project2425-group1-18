@@ -1,4 +1,4 @@
-  import { Nurse } from "@types";
+  import { Nurse, Trainer } from "@types";
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -60,7 +60,7 @@
       }
 
       try {
-        const response = await fetch(`${API_URL}/nurses/${nurseId}/heal/${pokemonId}`, {
+        const response = await fetch(`${API_URL}/nurses/heal/${pokemonId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -112,6 +112,36 @@
         throw error;
       }
     },
+
+    addPokemonToTrainer: async (pokemonId: number): Promise<Trainer> => {
+        const user = localStorage.getItem('loggedInUser');
+        let token = null;
+        if (user) {
+          token = JSON.parse(user).token;
+        }
+    
+        try {
+          const response = await fetch(`${API_URL}/nurses/pokemon/${pokemonId}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          });
+    
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Error response:', errorText);
+            throw new Error(`Failed to add Pokémon to Trainer: ${errorText}`);
+          }
+    
+          const data = await response.json();
+          return data as Trainer;  // Return updated trainer object
+        } catch (error) {
+          console.error('Error adding Pokémon to Trainer:', error);
+          throw error;
+        }
+      },
   };
 
 

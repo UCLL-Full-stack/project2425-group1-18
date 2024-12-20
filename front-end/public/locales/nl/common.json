@@ -30,6 +30,7 @@
         "type": "type",
         "add": "Voeg pokemon toe",
         "users-pokemon": "'s Pokémon",
+        "nurse-pokemon" : "'s Pokémon om voor te zorgen",
         "pokemon" : "Pokémon",
         "details" : "details voor",
         "stats": "statistieken:",
@@ -44,5 +45,11 @@
         "cancel" : "annuleren",
         "send-to-hospital" : "stuur naar het ziekenhuis",
         "has-been-send-to-hospital" : "is naar het ziekenhuis gestuurd"
+    },
+    "badge" : {
+        "location" : "Deze badge kan gewonnen worden in:",
+        "difficulty" : "Het heeft een moeilijkheid van:",
+        "get" : "krijg badge",
+        "congrats" : "Gefeliciteerd om deze badge te krijgen!"
     }
 }
