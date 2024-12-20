@@ -113,7 +113,7 @@ const Pokemons: React.FC = () => {
       <main>
         <h1>{t('pokemon.pokemon')}</h1>
 
-        {/* Trainer-specific view */}
+        {}
         {role === 'trainer' && trainers.length === 0 ? (
           <p>No trainers found for the logged-in email.</p>
         ) : (
@@ -144,7 +144,7 @@ const Pokemons: React.FC = () => {
           )
         )}
 
-        {/* Nurse-specific view */}
+        {}
         {role === 'nurse' && nurses.length === 0 ? (
           <p>No nurse found for the logged-in email.</p>
         ) : (
@@ -172,7 +172,7 @@ const Pokemons: React.FC = () => {
           )
         )}
 
-        {/* Admin-specific view */}
+        {}
         {role === 'admin' && (
           <>
             <h2>{t('trainers')}</h2>

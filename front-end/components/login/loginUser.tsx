@@ -18,7 +18,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Basic validation
+
     if (!email || !password) {
       setErrorMessage("Please enter both email and password.");
       return;
@@ -36,7 +36,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
           email: user.email,
         }));
 
-        // Call the parent function to handle success
+
         onLoginSuccess();
 
         setTimeout(() => {
@@ -54,7 +54,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
   return (
     <form onSubmit={handleLogin} className={styles.form}>
       <div className={styles.radioGroup}>
-        {/* Add your radio buttons for role if needed */}
+        {}
       </div>
 
       <div className={styles.inputGroup}>
@@ -86,7 +86,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
 
       {errorMessage && <p className={styles.error}>{errorMessage}</p>}
 
-      {/* Table to display the email, password, and role */}
+      {}
       <div className={styles.tableContainer}>
         <table className={styles.table}>
           <thead>

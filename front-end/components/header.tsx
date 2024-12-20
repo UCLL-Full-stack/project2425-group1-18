@@ -39,7 +39,7 @@ const Header: React.FC = () => {
           </Link>
         )}
 
-        {/* Trainer-specific Links */}
+        {}
         {role === 'trainer' && (
           <>
             <Link href="/pokemons" className="nav-link px-4 fs-5 text-white">
@@ -54,7 +54,7 @@ const Header: React.FC = () => {
           </>
         )}
 
-        {/* Nurse-specific Links */}
+        {}
         {role === 'nurse' && (
           <>
             <Link href="/pokemons" className="nav-link px-4 fs-5 text-white">
@@ -80,7 +80,7 @@ const Header: React.FC = () => {
           </>
         )}
 
-        {/* Language Switcher */}
+        {}
         <Language />
       </nav>
     </header>

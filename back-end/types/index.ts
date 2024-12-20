@@ -1,8 +1,8 @@
-// --- Role Definition ---
+
 type Role = "admin" | "trainer" | "nurse" ;
 
 
-// --- PokemonStats Type ---
+
 type PokemonStats = {
   hp: number;
   attack: number;
@@ -12,7 +12,7 @@ type PokemonStats = {
   speed: number;
 };
 
-// --- User Type ---
+
 type Userinput = {
   id?: number;
   firstName: string;
@@ -22,7 +22,7 @@ type Userinput = {
   role: Role;
 };
 
-// --- Badge Type ---
+
 type Badge = {
   id?: number;
   name: string;
@@ -30,7 +30,7 @@ type Badge = {
   difficulty: number;
 };
 
-// --- GymBattle Type ---
+
 type GymBattle = {
   id?: number;
   date: Date;
@@ -38,7 +38,7 @@ type GymBattle = {
   badge: Badge;
 };
 
-// --- Pokemon Type ---
+
 type PokemonInput = {
   id?: number;
   name: string;
@@ -55,7 +55,7 @@ type BadgeInput = {
   difficulty: number;
 };
 
-// --- Trainer Type ---
+
 type Trainer = {
   id?: number;
   user: Userinput;
@@ -64,7 +64,7 @@ type Trainer = {
   gymBattles: GymBattle[];
 };
 
-// --- AuthenticationResponse Type ---
+
 type AuthenticationResponse = {
   token: string;
   firstName: string;
@@ -74,7 +74,7 @@ type AuthenticationResponse = {
 };
 
 
-// --- Shared Exports ---
+
 export {
   Role,
   PokemonStats,

@@ -1,7 +1,7 @@
-// pages/login.tsx
+
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import LoginForm from "@components/login/loginUser"; // Importing LoginForm
+import LoginForm from "@components/login/loginUser"; 
 import styles from "../../styles/login/login.module.css";
 
 const LoginPage: React.FC = () => {
@@ -9,14 +9,12 @@ const LoginPage: React.FC = () => {
 
   const router = useRouter();
 
-  // Success callback when login is successful
   const handleLoginSuccess = () => {
     console.log("Login successful!");
-    // You can add further logic here after login success
   };
 
   const handleSignUpRedirect = () => {
-    router.push("/signup"); // Redirect to the signup page
+    router.push("/signup");
   };
 
   return (

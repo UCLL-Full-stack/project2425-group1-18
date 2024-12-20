@@ -10,7 +10,6 @@
     if (user){
       token = JSON.parse(user).token;
     }
-    // Make the GET request to fetch trainers
     const response = await fetch(`${API_URL}/nurses`, {
       method: "GET", 
       headers: {
@@ -29,7 +28,6 @@
         token = JSON.parse(user).token;
       }
 
-      try {
         const response = await fetch(`${API_URL}/nurses/${encodeURIComponent(email)}`, {
           method: 'GET',
           headers: {
@@ -46,10 +44,6 @@
 
         const data = await response.json();
         return data as Nurse;
-      } catch (error) {
-        console.error('Error fetching nurse data:', error);
-        throw error;
-      }
     },
 
     healPokemon: async (nurseId: number, pokemonId: number): Promise<any> => {
@@ -59,7 +53,7 @@
         token = JSON.parse(user).token;
       }
 
-      try {
+
         const response = await fetch(`${API_URL}/nurses/${nurseId}/heal/${pokemonId}`, {
           method: 'PUT',
           headers: {
@@ -76,10 +70,6 @@
 
         const data = await response.json();
         return data;
-      } catch (error) {
-        console.error('Error healing Pokémon:', error);
-        throw error;
-      }
     },
 
     removePokemonFromNurse: async ( idPokemon: number ): Promise<any> => {
@@ -89,8 +79,7 @@
         token = JSON.parse(user).token;
       }
   
-      try {
-        // Send a DELETE request to the server to remove the Pokémon from the Nurse
+
         const response = await fetch(`${API_URL}/nurses/pokemon/${idPokemon}`, {
           method: 'DELETE',
           headers: {
@@ -106,11 +95,8 @@
         }
   
         const data = await response.json();
-        return data; // Return the response data if successful (e.g., confirmation message, updated nurse state)
-      } catch (error) {
-        console.error('Error removing Pokémon from Nurse:', error);
-        throw error;
-      }
+        return data;
+
     },
   };
 
