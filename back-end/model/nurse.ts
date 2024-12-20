@@ -54,9 +54,9 @@ export class Nurse {
     }): Nurse {
         return new Nurse({
             id,
-            user: User.from(user), // Convert Prisma User to User class
+            user: User.from(user), 
             pokemon: pokemon.map((pokemonData) =>
-                Pokemon.from(pokemonData, pokemonData.stats) // Convert Prisma Pokemon to Pokemon class
+                Pokemon.from(pokemonData, pokemonData.stats) 
             )
         });
     }

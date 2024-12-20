@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt'; // Import bcrypt
+import bcrypt from 'bcrypt'; 
 
 const prisma = new PrismaClient();
 
@@ -9,15 +9,12 @@ const main = async () => {
     await prisma.pokemon.deleteMany();
     await prisma.trainer.deleteMany({});
 
-    // Delete the nurse records first (remove dependencies on the User table)
-    await prisma.nurse.deleteMany(); // Clear Nurse table before deleting users
+    await prisma.nurse.deleteMany(); 
 
-    // Now delete the users after removing the Nurse dependencies
     await prisma.user.deleteMany();
 
     await prisma.stats.deleteMany();
 
-    // Create stats for Pikachu and Charizard
     const pikachuStats = await prisma.stats.create({
         data: {
             hp: 40,
@@ -40,19 +37,17 @@ const main = async () => {
         },
     });
 
-    // Hash passwords for users
-    const hashedPasswordRed = await bcrypt.hash('GonnaBeTheBest151', 10);  // Hash Red's password
-    const hashedPasswordBlue = await bcrypt.hash('Sm3llY4L4ter', 10);  // Hash Blue's password
-    const hashedPasswordNurse = await bcrypt.hash('easyNurse', 10); // Hash Nurse password
+    const hashedPasswordRed = await bcrypt.hash('GonnaBeTheBest151', 10); 
+    const hashedPasswordBlue = await bcrypt.hash('Sm3llY4L4ter', 10);  
+    const hashedPasswordNurse = await bcrypt.hash('easyNurse', 10); 
     const hashedPasswordOak = await bcrypt.hash("GoAsh!Go4", 10);
 
-    // Create Users with hashed passwords
     const userRed = await prisma.user.create({
         data: {
             firstName: "Red",
             lastName: 'pokemon',
             email: 'red@gmail.com',
-            password: hashedPasswordRed,  // Store hashed password
+            password: hashedPasswordRed,  
             role: 'trainer',
         },
     });
@@ -62,7 +57,7 @@ const main = async () => {
             firstName: "Blue",
             lastName: 'pokemon',
             email: 'blue@gmail.com',
-            password: hashedPasswordBlue,  // Store hashed password
+            password: hashedPasswordBlue,  
             role: 'trainer',
         },
     });
@@ -77,7 +72,6 @@ const main = async () => {
         }
     })
 
-        // Create a Nurse with no Pokémon
         const userJoy = await prisma.user.create({
             data: {
                 firstName: "Nurse",
@@ -96,20 +90,18 @@ const main = async () => {
         },
     })
 
-    // Create Trainers and associate them with Users
     const trainerRed = await prisma.trainer.create({
         data: {
-            userId: userRed.id,  // Link to User Red
+            userId: userRed.id,  
         },
     });
 
     const trainerBlue = await prisma.trainer.create({
         data: {
-            userId: userBlue.id,  // Link to User Blue
+            userId: userBlue.id,  
         },
     });
 
-    // Create Pokémon
     const pikachu = await prisma.pokemon.create({
         data: {
             name: "pikachu",
@@ -117,10 +109,10 @@ const main = async () => {
             health: 38,
             canEvolve: true,
             stats: {
-                connect: { id: pikachuStats.id },  // Connect Pikachu stats
+                connect: { id: pikachuStats.id },  
             },
             trainer: {
-                connect: { id: trainerRed.id },  // Assign Pikachu to Trainer Red
+                connect: { id: trainerRed.id },  
             },
         },
     });
@@ -132,10 +124,10 @@ const main = async () => {
             health: 200,
             canEvolve: false,
             stats: {
-                connect: { id: charizardStats.id },  // Connect Charizard stats
+                connect: { id: charizardStats.id },  
             },
             trainer: {
-                connect: { id: trainerRed.id },  // Assign Charizard to Trainer Red
+                connect: { id: trainerRed.id }, 
             },
         },
     });
@@ -147,7 +139,7 @@ const main = async () => {
             health: 50,
             canEvolve: true,
             stats: {
-                create: {  // Create stats for Rattata directly
+                create: {  
                     hp: 50,
                     attack: 55,
                     defence: 40,
@@ -157,7 +149,7 @@ const main = async () => {
                 },
             },
             trainer: {
-                connect: { id: trainerBlue.id },  // Assign Rattata to Trainer Blue
+                connect: { id: trainerBlue.id },  
             },
         },
     });
@@ -169,7 +161,7 @@ const main = async () => {
             health: 250,
             canEvolve: false,
             stats: {
-                create: {  // Create stats for Blastoise directly
+                create: {  
                     hp: 250,
                     attack: 140,
                     defence: 130,
@@ -179,18 +171,18 @@ const main = async () => {
                 },
             },
             trainer: {
-                connect: { id: trainerBlue.id },  // Assign Blastoise to Trainer Blue
+                connect: { id: trainerBlue.id },  
             },
         },
     });
 
-    // Create Badges
+
     const boulderBadge = await prisma.badge.create({
         data: {
             name: "Boulder badge",
             location: "Pewter city",
             difficulty: 1,
-            trainer: {  // Link badge to Trainer Red
+            trainer: { 
                 connect: { id: trainerRed.id },
             },
         },
@@ -201,19 +193,19 @@ const main = async () => {
             name: "Cascade badge",
             location: "Cerulean city",
             difficulty: 1.5,
-            trainer: {  // Link badge to Trainer Blue
+            trainer: {  
                 connect: { id: trainerBlue.id },
             },
         },
         
     });
 
-    // Assign Badges to Trainers
+
     await prisma.trainer.update({
         where: { id: trainerRed.id },
         data: {
             badges: {
-                connect: { id: boulderBadge.id },  // Connect Boulder Badge to Red
+                connect: { id: boulderBadge.id },  
             },
         },
     });
@@ -222,7 +214,7 @@ const main = async () => {
         where: { id: trainerBlue.id },
         data: {
             badges: {
-                connect: [{ id: boulderBadge.id }, { id: cascadeBadge.id }],  // Connect both badges to Blue
+                connect: [{ id: boulderBadge.id }, { id: cascadeBadge.id }],  
             },
         },
     });

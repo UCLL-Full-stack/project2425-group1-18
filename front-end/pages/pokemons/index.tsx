@@ -9,6 +9,7 @@ import AddPokemonModal from '@components/pokemon/addPokemonModal';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serversideTranslations';
 import PokemonDetailsNurse from '@components/pokemon/pokemonDetailsNurse';
+import Head from 'next/head';
 
 const Pokemons: React.FC = () => {
   const [trainers, setTrainers] = useState<Trainer[]>([]);
@@ -101,24 +102,35 @@ const Pokemons: React.FC = () => {
             trainer.id === updatedTrainer.id ? updatedTrainer : trainer
           )
         );
-      }
+      } 
     } catch (error) {
       console.error(error);
     }
   };
 
+  const handleAddAdmin = (trainer: Trainer | Nurse) => {
+    if ('pokemon' in trainer) {
+      setSelectedTrainer(trainer as Trainer);
+    } else {
+      setSelectedNurse(trainer as Nurse);
+    }
+    setIsModalOpen(true);
+  };
+
   return (
     <>
+      <Head>
+        <title>{t("app.title")}</title>
+      </Head>
       <Header />
       <main>
         <h1>{t('pokemon.pokemon')}</h1>
 
-        {/* Trainer-specific view */}
+        {/* Trainer View */}
         {role === 'trainer' && trainers.length === 0 ? (
           <p>No trainers found for the logged-in email.</p>
         ) : (
-          role === 'trainer' &&
-          selectedTrainer && (
+          role === 'trainer' && selectedTrainer && (
             <>
               <h2>
                 {selectedTrainer.user.firstName}
@@ -127,6 +139,12 @@ const Pokemons: React.FC = () => {
               <button onClick={() => setIsModalOpen(true)}>
                 {t('pokemon.add')}
               </button>
+              {selectedTrainer && isModalOpen && (
+                <AddPokemonModal
+                  onClose={() => setIsModalOpen(false)}
+                  onAddPokemon={handleAddPokemon}
+                />
+              )}
               <PokemonOverviewTable
                 pokemon={selectedTrainer.pokemon}
                 selectPokemon={handleSelectPokemon}
@@ -144,12 +162,11 @@ const Pokemons: React.FC = () => {
           )
         )}
 
-        {/* Nurse-specific view */}
+        {/* Nurse View */}
         {role === 'nurse' && nurses.length === 0 ? (
           <p>No nurse found for the logged-in email.</p>
         ) : (
-          role === 'nurse' &&
-          selectedNurse && (
+          role === 'nurse' && selectedNurse && (
             <>
               <h2>
                 {selectedNurse.user.firstName}
@@ -172,52 +189,70 @@ const Pokemons: React.FC = () => {
           )
         )}
 
-        {/* Admin-specific view */}
+        {/* Admin View */}
         {role === 'admin' && (
-          <>
-            <h2>{t('trainers')}</h2>
-            {trainers.map((trainer) => (
-              <div key={trainer.id}>
-                <h3>{trainer.user.firstName}</h3>
-                <button
-                  onClick={() => setSelectedTrainer(trainer)}
-                  style={{ marginBottom: '1em' }}
-                >
-                  {t('pokemon.add-pokemon')}
-                </button>
-                <PokemonOverviewTable
-                  pokemon={trainer.pokemon}
-                  selectPokemon={handleSelectPokemon}
-                />
-              </div>
-            ))}
-            <h2>{t('nurses')}</h2>
-            {nurses.map((nurse) => (
-              <div key={nurse.id}>
-                <h3>{nurse.user.firstName}</h3>
-                <PokemonOverviewTable
-                  pokemon={nurse.pokemon}
-                  selectPokemon={handleSelectPokemon}
-                />
-              </div>
-            ))}
-            {selectedTrainer && isModalOpen && (
-              <AddPokemonModal
-                onClose={() => setIsModalOpen(false)}
-                onAddPokemon={handleAddPokemon}
-              />
-            )}
-            {selectedPokemon && (
-              <PokemonDetailsNurse
-                pokemon={selectedPokemon}
-                nurseId={1}
-                reload={setUpdate}
-                update={update}
-                clearSelected={clearSelected}
-              />
-            )}
-          </>
+  <>
+    <h2>{t('trainers')}</h2>
+    {trainers.map((trainer) => (
+      <div key={trainer.id}>
+        <h3>{trainer.user.firstName}</h3>
+        <button
+          onClick={() => handleAddAdmin(trainer)} 
+          style={{ marginBottom: '1em' }}
+        >
+          {t('pokemon.add')}
+        </button>
+        <PokemonOverviewTable
+          pokemon={trainer.pokemon}
+          selectPokemon={handleSelectPokemon}
+        />
+        {selectedPokemon && selectedTrainer?.id === trainer.id && (
+          <PokemonDetails
+            pokemon={selectedPokemon}
+            nurseId={1}
+            reload={setUpdate}
+            update={update}
+            clearSelected={clearSelected}
+          />
         )}
+      </div>
+    ))}
+    <h2>{t('nurses')}</h2>
+    {nurses.map((nurse) => (
+      <div key={nurse.id}>
+        <h3>{nurse.user.firstName}</h3>
+        <PokemonOverviewTable
+          pokemon={nurse.pokemon}
+          selectPokemon={handleSelectPokemon}
+        />
+        {selectedPokemon && selectedNurse?.id === nurse.id && (
+          <PokemonDetailsNurse
+            pokemon={selectedPokemon}
+            nurseId={1}
+            reload={setUpdate}
+            update={update}
+            clearSelected={clearSelected}
+          />
+        )}
+      </div>
+    ))}
+    {selectedTrainer && isModalOpen && (
+      <AddPokemonModal
+        onClose={() => setIsModalOpen(false)}
+        onAddPokemon={handleAddPokemon}
+      />
+    )}
+    {selectedPokemon && (
+      <PokemonDetailsNurse
+        pokemon={selectedPokemon}
+        nurseId={1}
+        reload={setUpdate}
+        update={update}
+        clearSelected={clearSelected}
+      />
+    )}
+  </>
+)}
       </main>
     </>
   );

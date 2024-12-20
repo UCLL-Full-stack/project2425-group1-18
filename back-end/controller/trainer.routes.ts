@@ -14,12 +14,12 @@
  *           type: number
  *           format: int64
  *           description: Unique identifier for the trainer
- *         name:
- *           type: string
- *           description: Trainer's name
  *         user:
  *           type: object
  *           properties:
+ *             id:
+ *               type: number
+ *               description: Unique identifier for the user
  *             firstName:
  *               type: string
  *               description: First name of the user
@@ -33,9 +33,21 @@
  *           type: array
  *           items:
  *             $ref: '#/components/schemas/Pokemon'
+ *         badges:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Badge'
+ *         gymBattles:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/GymBattle'
  *     Pokemon:
  *       type: object
  *       properties:
+ *         id:
+ *           type: number
+ *           format: int64
+ *           description: Unique identifier for the pokemon
  *         name:
  *           type: string
  *           description: Name of the Pokemon
@@ -47,7 +59,7 @@
  *           description: Health points of the Pokemon
  *         canEvolve:
  *           type: boolean
- *           description: if the pokemon can evolve
+ *           description: Whether the Pokemon can evolve
  *         stats:
  *           type: object
  *           properties:
@@ -69,13 +81,60 @@
  *             speed:
  *               type: number
  *               description: Speed of the Pokemon
+ *     Badge:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: number
+ *           description: Unique identifier for the badge
+ *         name:
+ *           type: string
+ *           description: Name of the badge (e.g., Cascade badge)
+ *         location:
+ *           type: string
+ *           description: Location where the badge can be earned (e.g., Cerulean city)
+ *         difficulty:
+ *           type: number
+ *           description: Difficulty level of earning the badge
+ *     GymBattle:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: number
+ *           description: Unique identifier for the gym battle
+ *         opponent:
+ *           type: string
+ *           description: Name of the opponent gym leader
+ *         result:
+ *           type: string
+ *           description: Result of the battle (e.g., win, lose)
+ *         date:
+ *           type: string
+ *           format: date-time
+ *           description: Date of the gym battle
+ *     BadgeInput:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: Name of the badge
+ *         location:
+ *           type: string
+ *           description: Location where the badge can be earned
+ *         difficulty:
+ *           type: number
+ *           description: Difficulty level of earning the badge
+ *       required:
+ *         - name
+ *         - location
+ *         - difficulty
  */
-import express, { NextFunction, Request, response, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import trainerService from '../service/trainer.service';
-import { BadgeInput, PokemonInput} from '../types';
-
+import { BadgeInput, PokemonInput } from '../types';
 
 const trainerRouter = express.Router();
+
 /**
  * @swagger
  * /trainers:
@@ -126,7 +185,7 @@ trainerRouter.get('/', async (req: Request, res: Response, next: NextFunction) =
  *             schema:
  *               $ref: '#/components/schemas/Trainer'
  *       404:
- *         description: Trainer with the s  pecified email not found
+ *         description: Trainer with the specified email not found
  *       500:
  *         description: Server error
  */
@@ -190,31 +249,64 @@ trainerRouter.get('/email', async (req: Request, res: Response, next: NextFuncti
 trainerRouter.post('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const pokemon = <PokemonInput>req.body;
-        const result = await trainerService.addPokemonToTrainerById(Number(req.params.id),pokemon)
+        const result = await trainerService.addPokemonToTrainerById(Number(req.params.id), pokemon);
         res.status(200).json(result);
     } catch (error) {
         if (error instanceof Error) {
-            res.status(400).json({message:error.message})
+            res.status(400).json({ message: error.message });
         } else {
-            next(error)         
+            next(error);
         }
     }
-})
+});
 
-
+/**
+ * @swagger
+ * /trainers/{id}/badge:
+ *   post:
+ *     summary: Add a badge to a specific trainer
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The numeric ID of the trainer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/BadgeInput'
+ *     responses:
+ *       200:
+ *         description: Badge successfully added to the trainer
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Trainer'
+ *       400:
+ *         description: Invalid input or data
+ *       404:
+ *         description: Trainer not found
+ *       500:
+ *         description: Server error
+ */
 trainerRouter.post('/:id/badge', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const badge = <BadgeInput>req.body;
-        const result = await trainerService.addBadgeToTrainerById(Number(req.params.id),badge)
+        const result = await trainerService.addBadgeToTrainerById(Number(req.params.id), badge);
         res.status(200).json(result);
     } catch (error) {
         if (error instanceof Error) {
-            res.status(400).json({message:error.message})
+            res.status(400).json({ message: error.message });
         } else {
-            next(error)         
+            next(error);
         }
     }
-})
+});
 
 /**
  * @swagger
@@ -274,4 +366,4 @@ trainerRouter.put('/pokemon/:idPokemon/nurse/:idNurse', async (req: Request, res
     }
 });
 
-export {trainerRouter};
+export { trainerRouter };

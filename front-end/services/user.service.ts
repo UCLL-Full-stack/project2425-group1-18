@@ -1,4 +1,4 @@
-import { Pokemon, Trainer, User } from '@types';
+
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -33,7 +33,7 @@ const UserService = {
         }),
       });
 
-      return await response.json(); // Assuming the API returns the created user data
+      return await response.json();
   },
 };
 

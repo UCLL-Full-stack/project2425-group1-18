@@ -1,5 +1,5 @@
-import database from "../util/database"; // Prisma instance for querying
-import { Nurse } from "../model/nurse"; // Assuming Nurse model is defined
+import database from "../util/database"; 
+import { Nurse } from "../model/nurse"; 
 
 
 const getAllNurse = async (): Promise<Nurse[]> => {
@@ -18,7 +18,7 @@ const getAllNurse = async (): Promise<Nurse[]> => {
 };
 
 const getNurseByEmail = async (email: string): Promise<Nurse | null> => {
-    // First, find the user by email
+
     const user = await database.user.findFirst({
         where: { email },
     });
@@ -27,10 +27,10 @@ const getNurseByEmail = async (email: string): Promise<Nurse | null> => {
         throw new Error(`User with email${email} not found.`);
     }
 
-    // Then, find the trainer using the userId
-    const nursePrisma = await database.nurse.findFirst({ // Use findFirst here
+
+    const nursePrisma = await database.nurse.findFirst({ 
         where: {
-            userId: user.id, // Use userId to find the trainer
+            userId: user.id, 
         },
         include: {
             user: true,
@@ -46,7 +46,7 @@ const getNurseByEmail = async (email: string): Promise<Nurse | null> => {
         throw new Error(`nurse with userId ${user.id} not found.`);
     }
 
-    // Return the transformed trainer object
+
     return Nurse.from({
         ...nursePrisma,
         
@@ -58,28 +58,28 @@ import { Trainer } from "../model/trainer";
 
 
 const healPokemon = async (id: number): Promise<Pokemon> => {
-    // Fetch the Pokémon and its associated stats from the database
+
     const pokemonWithStats = await database.pokemon.findUnique({
         where: {
             id,
         },
         include: {
-            stats: true, // Include the stats relation to get hp, attack, etc.
+            stats: true,
         },
     });
 
-    // Check if the Pokémon exists
+
     if (!pokemonWithStats) {
         throw new Error(`Pokemon with ID ${id} not found.`);
     }
 
-    // Use the `hp` from stats to set the health
+
     const healedPokemon = Pokemon.from(pokemonWithStats, pokemonWithStats.stats);
 
-    // Set the health to the hp stat
+
     const newHealth = pokemonWithStats.stats.hp;
 
-    // Update the Pokémon's health in the database
+
     await database.pokemon.update({
         where: { id },
         data: {
@@ -87,13 +87,13 @@ const healPokemon = async (id: number): Promise<Pokemon> => {
         },
     });
 
-    // Return the updated Pokémon object with health set to hp
+
     return new Pokemon({
         id: healedPokemon.getId(),
         name: healedPokemon.getName(),
         type: healedPokemon.getType(),
         stats: healedPokemon.getStats(),
-        health: newHealth, // Updated health value
+        health: newHealth,
         canEvolve: healedPokemon.getCanEvolve(),
     });
 };
@@ -101,10 +101,10 @@ const healPokemon = async (id: number): Promise<Pokemon> => {
 const removePokemonFromNurse = async ({
     idPokemon,
 }: { idPokemon: number }): Promise<Pokemon> => {
-    // Step 1: Verify if the Pokémon exists and is currently assigned to a nurse
+
     const pokemon = await database.pokemon.findUnique({
         where: { id: idPokemon },
-        include: { nurse: true }, // Verify the current nurse association
+        include: { nurse: true }, 
     });
 
     if (!pokemon) {
@@ -115,38 +115,34 @@ const removePokemonFromNurse = async ({
         throw new Error(`Pokemon with id ${idPokemon} is not assigned to any nurse.`);
     }
 
-    // Step 2: Disconnect the Pokémon from the current Nurse using the "disconnect" method
     await database.pokemon.update({
         where: { id: idPokemon },
         data: {
-            nurse: { disconnect: true }, // Use the "disconnect" operation to remove the nurse
+            nurse: { disconnect: true }, 
         },
     });
 
-    // Step 3: Manually re-map or re-fetch the updated Pokémon with the appropriate type
     const updatedPokemon = await database.pokemon.findUnique({
         where: { id: idPokemon },
-        include: { nurse: true, stats: true }, // Re-fetch all necessary related data
+        include: { nurse: true, stats: true }, 
     });
 
-    // Assuming you have a class `Pokemon` that has methods like `getId()`
     if (!updatedPokemon) {
         throw new Error(`Pokemon with id ${idPokemon} could not be found after update.`);
     }
 
-    // Create a new instance of your Pokemon class (if necessary)
-    return new Pokemon(updatedPokemon); // Assuming `Pokemon` is a class and has a constructor
+
+    return new Pokemon(updatedPokemon); 
 };
 
 
 const addPokemonToTrainer = async ({
     idPokemon,
 }: { idPokemon: number }): Promise<Trainer> => {
-    // Step 1: Retrieve the Pokémon and its previous trainer
     const pokemon = await database.pokemon.findUnique({
         where: { id: idPokemon },
         include: {
-            nurse: true,           // Include nurse association if any
+            nurse: true,          
         },
     });
 
@@ -154,21 +150,18 @@ const addPokemonToTrainer = async ({
         throw new Error(`Pokémon with id ${idPokemon} does not exist.`);
     }
 
-    // Step 2: Check if the Pokémon has a `previousTrainerId`
     if (!pokemon.previousTrainerId) {
         throw new Error(`Pokémon with id ${idPokemon} does not have a previous trainer.`);
     }
 
-    // Step 3: Ensure the Pokémon is assigned to a Nurse
     if (!pokemon.nurseId) {
         throw new Error(`Pokémon with id ${idPokemon} is not currently assigned to any Nurse.`);
     }
 
-    // Step 4: Retrieve the previous trainer using the `previousTrainerId`
     const previousTrainer = await database.trainer.findUnique({
         where: { id: pokemon.previousTrainerId },
         include: {
-            pokemon: true, // Include Pokémon for return
+            pokemon: true,
         },
     });
 
@@ -176,18 +169,16 @@ const addPokemonToTrainer = async ({
         throw new Error(`Trainer with id ${pokemon.previousTrainerId} does not exist.`);
     }
 
-    // Step 5: Update the Pokémon to assign it to the previous trainer
     await database.pokemon.update({
         where: { id: idPokemon },
         data: {
             trainer: {
-                connect: { id: pokemon.previousTrainerId }, // Assign Pokémon to the previous trainer
+                connect: { id: pokemon.previousTrainerId },
             },
-            previousTrainerId: pokemon.trainerId, // Keep track of the previous trainer ID
+            previousTrainerId: pokemon.trainerId, 
         },
     });
 
-    // Step 6: Retrieve the updated trainer object
     const updatedTrainer = await database.trainer.findUnique({
         where: { id: pokemon.previousTrainerId },
         include: {
@@ -202,7 +193,6 @@ const addPokemonToTrainer = async ({
         throw new Error(`Failed to retrieve updated trainer with id ${pokemon.previousTrainerId}.`);
     }
 
-    // Step 7: Return the updated Trainer object
     return Trainer.from({
         ...updatedTrainer,
         badge: updatedTrainer.badges,

@@ -11,7 +11,6 @@ const TrainerService = {
     if (user){
       token = JSON.parse(user).token;
     }
-    // Make the GET request to fetch trainers
     const response = await fetch(`${API_URL}/trainers`, {
       method: "GET", 
       headers: {
@@ -40,12 +39,12 @@ const TrainerService = {
     });
     
     if (!response.ok) {
-      const errorText = await response.text();  // Read response as text if error
+      const errorText = await response.text();
       console.error('Error response:', errorText);
       throw new Error('Failed to fetch trainer data');
     }
     
-    const data = await response.json();  // Parse the JSON if the response is OK
+    const data = await response.json();
     return data as Trainer;
   },
 
@@ -101,7 +100,7 @@ const TrainerService = {
     let token = null;
 
     if (user) {
-      token = JSON.parse(user).token; // Retrieve JWT token from localStorage
+      token = JSON.parse(user).token; 
     }
 
     const response = await fetch(
@@ -110,7 +109,7 @@ const TrainerService = {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Attach token for authentication
+          Authorization: `Bearer ${token}`, 
         },
       }
     );
@@ -121,37 +120,7 @@ const TrainerService = {
     }
 
     const updatedTrainer = await response.json();
-    return updatedTrainer as Trainer; // Return the updated trainer data
-  },
-
-  addPokemonToTrainer: async (pokemonId: number): Promise<Trainer> => {
-    const user = localStorage.getItem('loggedInUser');
-    let token = null;
-    if (user) {
-      token = JSON.parse(user).token;
-    }
-
-    try {
-      const response = await fetch(`${API_URL}/trainers/pokemon/${pokemonId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
-        throw new Error(`Failed to add Pokémon to Trainer: ${errorText}`);
-      }
-
-      const data = await response.json();
-      return data as Trainer;  // Return updated trainer object
-    } catch (error) {
-      console.error('Error adding Pokémon to Trainer:', error);
-      throw error;
-    }
+    return updatedTrainer as Trainer; 
   },
 };
 
@@ -163,4 +132,3 @@ const TrainerService = {
 export default TrainerService;
 
 
-// alert hoeven hiert niet moet enkel de simple dingen zijn 

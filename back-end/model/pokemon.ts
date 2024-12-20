@@ -1,14 +1,10 @@
-import { th } from "date-fns/locale";
-import {
-    Pokemon as PokemonPrisma,
-    Stats as StatsPrisma
-    } from "@prisma/client";
+import { Pokemon as PokemonPrisma, Stats as StatsPrisma } from "@prisma/client";
 
 export class Pokemon {
     private id?: number;
     private name: string;
     private type: string;
-    private stats: {hp:number,attack:number,defence:number,specialAttack:number,specialDefence:number,speed:number};
+    private stats: {hp:number, attack:number, defence:number, specialAttack:number, specialDefence:number, speed:number};
     private health: number;
     private canEvolve: boolean;
 
@@ -16,10 +12,23 @@ export class Pokemon {
         id?: number;
         name: string;
         type: string;
-        stats: {hp:number,attack:number,defence:number,specialAttack:number,specialDefence:number,speed:number};
+        stats: {hp:number, attack:number, defence:number, specialAttack:number, specialDefence:number, speed:number};
         health: number;
         canEvolve: boolean;
     }) {
+        // Validation checks
+        if (pokemon.name == '') throw new Error('name is required.');
+        if (pokemon.type == '') throw new Error('type is required.');
+        if (pokemon.health < 0) throw new Error('health cannot be negative.');
+        if (pokemon.stats.hp <= 0) throw new Error('hp cannot be smaller than or equal to 0.');
+        if (pokemon.stats.attack <= 0) throw new Error('attack cannot be smaller than or equal to 0.');
+        if (pokemon.stats.defence <= 0) throw new Error('defence cannot be smaller than or equal to 0.');
+        if (pokemon.stats.specialAttack <= 0) throw new Error('special attack cannot be smaller than or equal to 0.');
+        if (pokemon.stats.specialDefence <= 0) throw new Error('special defence cannot be smaller than or equal to 0.');
+        if (pokemon.stats.speed <= 0) throw new Error('speed cannot be smaller than or equal to 0.');
+        if (pokemon.stats.hp < pokemon.health) throw new Error('current health cannot be higher than hp.');
+
+        // If all validation passes, assign properties
         this.id = pokemon.id;
         this.name = pokemon.name;
         this.type = pokemon.type;
@@ -40,7 +49,7 @@ export class Pokemon {
         return this.type;
     }
 
-    getStats(): {hp:number,attack:number,defence:number,specialAttack:number,specialDefence:number,speed:number} {
+    getStats(): {hp:number, attack:number, defence:number, specialAttack:number, specialDefence:number, speed:number} {
         return this.stats;
     }
 
@@ -52,8 +61,8 @@ export class Pokemon {
         return this.canEvolve;
     }
 
-    equals(pokemon: Pokemon): boolean{
-        return(
+    equals(pokemon: Pokemon): boolean {
+        return (
             this.id === pokemon.getId() &&
             this.name === pokemon.getName() &&
             this.type === pokemon.getType() &&

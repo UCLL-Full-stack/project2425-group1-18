@@ -1,10 +1,9 @@
-import { GymBattle } from '../../model/gymBattle'; // Adjust the import path accordingly
-import { Badge } from '../../model/badge'; // Adjust the import path accordingly
+import { GymBattle } from '../../model/gymBattle'; 
+import { Badge } from '../../model/badge'; 
 import { Badge as BadgePrisma, GymBattle as GymBattlePrisma } from '@prisma/client';
 
 describe('GymBattle Class', () => {
-  
-  // Mock badge data for creating GymBattle instances
+
   const badgeData = {
     id: 1,
     name: 'Boulder Badge',
@@ -12,9 +11,9 @@ describe('GymBattle Class', () => {
     difficulty: 1,
   };
 
-  const badge = new Badge(badgeData); // Create Badge instance
 
-  // Mock GymBattle data
+  const badge = new Badge(badgeData); 
+
   const gymBattleData = {
     id: 1,
     date: new Date('2024-12-20T10:00:00Z'),

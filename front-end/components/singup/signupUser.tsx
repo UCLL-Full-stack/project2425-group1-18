@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import styles from "../../styles/login/login.module.css";
 import { useTranslation } from "next-i18next";
-import UserService from "../../services/user.service"; // Adjust the path if needed
+import UserService from "../../services/user.service";
 
 const SignUpForm: React.FC = () => {
   const [firstName, setFirstName] = useState<string>("");
@@ -12,7 +12,7 @@ const SignUpForm: React.FC = () => {
   const [role, setRole] = useState<"admin" | "trainer" | "nurse">("trainer");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [signUpSuccess, setSignUpSuccess] = useState<boolean>(false); // Success flag
+  const [signUpSuccess, setSignUpSuccess] = useState<boolean>(false); 
 
   const router = useRouter();
   const { t } = useTranslation();
@@ -23,10 +23,10 @@ const SignUpForm: React.FC = () => {
     setError(null);
 
     try {
-      // Attempt to sign up the user
+
       const user = await UserService.signUp(firstName, lastName, email, password, role);
       console.log("User created successfully:", user);
-      setSignUpSuccess(true); // Set the success flag
+      setSignUpSuccess(true); 
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred.");
     } finally {
@@ -34,13 +34,13 @@ const SignUpForm: React.FC = () => {
     }
   };
 
-  // Redirect after successful signup
+
   useEffect(() => {
     if (signUpSuccess) {
-      // Optionally add a small delay before redirect to ensure the page is fully loaded
+
       setTimeout(() => {
-        router.push("/login"); // Redirect to login page after successful signup
-      }, 1000); // 1 second delay
+        router.push("/login");
+      }, 1000); 
     }
   }, [signUpSuccess, router]);
 

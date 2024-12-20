@@ -1,8 +1,11 @@
-// pages/signup.tsx
+
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import SignUpForm from "@components/singup/signupUser"; // Importing SignUpForm
+import SignUpForm from "@components/singup/signupUser"; 
 import styles from "../../styles/login/login.module.css";
+import Head from 'next/head';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serversideTranslations';
 
 const SignUpPage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -10,7 +13,7 @@ const SignUpPage: React.FC = () => {
   const router = useRouter();
 
   const handleLoginRedirect = () => {
-    router.push("/login"); // Redirect to the login page
+    router.push("/login");
   };
 
   return (

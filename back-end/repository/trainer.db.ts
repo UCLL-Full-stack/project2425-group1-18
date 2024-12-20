@@ -116,9 +116,7 @@ const getAllTrainers = async (): Promise<Trainer[]> => {
     });
 };
 
-// In trainer.service.ts (or wherever the service functions are defined)
 const getTrainerByEmail = async (email: string): Promise<Trainer | null> => {
-    // First, find the user by email
     const user = await database.user.findFirst({
         where: { email },
     });
@@ -127,10 +125,10 @@ const getTrainerByEmail = async (email: string): Promise<Trainer | null> => {
         throw new Error(`User with email ${email} not found.`);
     }
 
-    // Then, find the trainer using the userId
-    const trainerPrisma = await database.trainer.findFirst({ // Use findFirst here
+
+    const trainerPrisma = await database.trainer.findFirst({ 
         where: {
-            userId: user.id, // Use userId to find the trainer
+            userId: user.id, 
         },
         include: {
             user: true,
@@ -148,7 +146,6 @@ const getTrainerByEmail = async (email: string): Promise<Trainer | null> => {
         throw new Error(`Trainer with userId ${user.id} not found.`);
     }
 
-    // Return the transformed trainer object
     return Trainer.from({
         ...trainerPrisma,
         badge: trainerPrisma.badges,
@@ -157,11 +154,11 @@ const getTrainerByEmail = async (email: string): Promise<Trainer | null> => {
 };
 
 const addPokemonToTrainerById = async ({ id, pokemon }: { id: number, pokemon: Pokemon }): Promise<Trainer | null> => {
-    // First, ensure that the trainer exists in the database
+
     const trainerPrisma = await database.trainer.findUnique({
         where: { id },
         include: {
-            pokemon: true, // Include current Pokémon
+            pokemon: true, 
         },
     });
 
@@ -169,7 +166,7 @@ const addPokemonToTrainerById = async ({ id, pokemon }: { id: number, pokemon: P
         throw new Error(`Trainer with id ${id} does not exist.`);
     }
 
-    // Create the new Pokemon in the database
+
     const newPokemon = await database.pokemon.create({
         data: {
             name: pokemon.getName(),
@@ -187,13 +184,13 @@ const addPokemonToTrainerById = async ({ id, pokemon }: { id: number, pokemon: P
                 },
             },
             trainer: {
-                connect: { id }, // Associate this Pokemon with the trainer
+                connect: { id }, 
             },
         },
-        include: { stats: true }, // Include stats when returning the new Pokemon
+        include: { stats: true }, 
     });
 
-    // After adding the Pokemon, retrieve the updated trainer with the new Pokemon
+
     const updatedTrainer = await database.trainer.findUnique({
         where: { id },
         include: {
@@ -204,22 +201,22 @@ const addPokemonToTrainerById = async ({ id, pokemon }: { id: number, pokemon: P
         },
     });
 
-    // Return the updated trainer by using the correct shape expected by Trainer.from()
+
     if (!updatedTrainer) {
         return null;
     }
 
-    // Ensure we provide the correct shape to `Trainer.from`
+
     const trainerData = {
         id: updatedTrainer.id,
-        userId: updatedTrainer.userId, // Ensure userId is included
+        userId: updatedTrainer.userId,
         user: updatedTrainer.user,
         pokemon: updatedTrainer.pokemon,
         badge: updatedTrainer.badges,
         gymBattle: updatedTrainer.gymBattles,
     };
 
-    return Trainer.from(trainerData); // Pass correctly shaped data to `Trainer.from()`
+    return Trainer.from(trainerData); 
 };
 
 const addBadgeToTrainerById = async({id, badge}: {id:number, badge:Badge}): Promise<Trainer | null> => {
@@ -258,6 +255,7 @@ const addBadgeToTrainerById = async({id, badge}: {id:number, badge:Badge}): Prom
     if (!updatedTrainer) {
         return null;
     }
+    
 
     const trainerData = {
         id: updatedTrainer.id,
@@ -276,19 +274,18 @@ const removePokemonAndAddToNurse = async ({ idPokemon, idNurse }: { idPokemon: n
     // Step 1: Verify if the Pokémon exists
     const pokemon = await database.pokemon.findUnique({
         where: { id: idPokemon },
-        include: { trainer: true }, // Include trainer to access the current trainer's ID
+        include: { trainer: true }, 
     });
 
     if (!pokemon) {
         throw new Error(`Pokemon with id ${idPokemon} does not exist.`);
     }
 
-    // Check if the Pokémon has an associated trainer
     if (!pokemon.trainer) {
         throw new Error(`Pokemon with id ${idPokemon} is not associated with any trainer.`);
     }
 
-    // Step 2: Verify if the Nurse exists
+
     const nurse = await database.nurse.findUnique({
         where: { id: idNurse },
         include: { pokemon: true },
@@ -298,28 +295,26 @@ const removePokemonAndAddToNurse = async ({ idPokemon, idNurse }: { idPokemon: n
         throw new Error(`Nurse with id ${idNurse} does not exist.`);
     }
 
-    // Step 3: Store the current Trainer's ID in `previousTrainerId`
     await database.pokemon.update({
         where: { id: idPokemon },
         data: {
-            previousTrainerId: pokemon.trainer.id, // Save the trainer's ID
-            trainer: { disconnect: true }, // Remove the association with the trainer
+            previousTrainerId: pokemon.trainer.id,
+            trainer: { disconnect: true },
         },
     });
 
-    // Step 4: Connect the Pokémon to the Nurse
     await database.pokemon.update({
         where: { id: idPokemon },
         data: {
             nurse: {
-                connect: { id: idNurse }, // Associate the Pokémon with the Nurse
+                connect: { id: idNurse },
             },
         },
     });
 
-    // Step 5: Retrieve the updated Trainer (trainer with the Pokémon removed)
+
     const updatedTrainer = await database.trainer.findUnique({
-        where: { id: pokemon.trainer.id }, // Safe now because we checked `trainer` exists
+        where: { id: pokemon.trainer.id }, 
         include: {
             user: true,
             pokemon: { include: { stats: true } },
@@ -332,7 +327,6 @@ const removePokemonAndAddToNurse = async ({ idPokemon, idNurse }: { idPokemon: n
         throw new Error(`Trainer with id ${pokemon.trainer.id} not found after update.`);
     }
 
-    // Step 6: Return the updated Trainer object
     return Trainer.from({
         ...updatedTrainer,
         badge: updatedTrainer.badges,
